@@ -1291,8 +1291,8 @@ async function startCheckout() {
 
   try {
     // ── 1. Create Razorpay order on our backend ──
-    const res = await fetch('/api/checkout', {
-      method:  'POST',
+const res = await fetch('https://the-apertures-api.onrender.com/api/checkout', {
+    method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ bookId: currentBookId, email })
     });
@@ -1337,8 +1337,8 @@ async function startCheckout() {
         closeModal();
 
         try {
-          const verify = await fetch('/api/verify-payment', {
-            method:  'POST',
+          const verify = await fetch('https://the-apertures-api.onrender.com/api/verify-payment', {
+          method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({
               razorpay_order_id,
