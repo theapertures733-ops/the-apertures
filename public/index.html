@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Apertures — Cinematic Romance. Uncensored Fantasies.</title>
+<meta name="description" content="Premium erotica for readers who want more than a story. The Apertures — where every page burns."/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --black:    #050505;
+  --black-2:  #0a0a0a;
+  --black-3:  #111111;
+  --panel:    #0d0d0d;
+  --crimson:  #a62b2b;
+  --crimson-2:#c43535;
+  --crimson-3:#7a1f1f;
+  --smoke:    #fdfbf7;
+  --silver:   #b8b8b8;
+  --dim:      #666666;
+  --border:   rgba(253,251,247,0.07);
+  --border-c: rgba(166,43,43,0.3);
+  --glow:     rgba(166,43,43,0.12);
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--black);
+  color: var(--smoke);
+  overflow-x: hidden;
+  line-height: 1.7;
+  cursor: default;
+}
+::selection { background: var(--crimson-3); color: var(--smoke); }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--crimson-3); }
+img{
+    display:block;
+    width:100%;
+    height:560px;
+    object-fit:cover;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ═══════════════════════════════════════════
+   CURSOR — custom red dot
+═══════════════════════════════════════════ */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--crimson);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, opacity .2s;
+  mix-blend-mode: normal;
+}
+.cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(166,43,43,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width .35s, height .35s, transform .12s;
+}
+.cursor.hover { width: 14px; height: 14px; }
+.cursor-ring.hover { width: 56px; height: 56px; border-color: var(--crimson); }
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 6vw;
+  transition: background .4s, padding .4s, border-color .4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(5,5,5,0.96);
+  backdrop-filter: blur(20px);
+  padding: 16px 6vw;
+  border-color: var(--border);
+}
+.nav-logo {
+  font-family: 'Cinzel', serif;
+  font-size: .75rem; font-weight: 700;
+  letter-spacing: .32em; text-transform: uppercase;
+  color: var(--smoke);
+}
+.nav-logo span { color: var(--crimson); }
+nav ul {
+  list-style: none; display: flex; gap: 38px; align-items: center;
+}
+nav a {
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--silver); transition: color .2s;
+}
+nav a:hover { color: var(--smoke); }
+.nav-buy {
+  border: 1px solid var(--border-c);
+  padding: 8px 20px; border-radius: 2px;
+  color: var(--crimson-2) !important;
+  transition: background .2s, color .2s !important;
+}
+.nav-buy:hover {
+  background: var(--crimson) !important;
+  color: var(--smoke) !important;
+  border-color: var(--crimson) !important;
+}
+.nav-menu-btn {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.nav-menu-btn span { width: 22px; height: 1px; background: var(--silver); display: block; transition: all .3s; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  position: relative; overflow: hidden;
+  padding: 120px 6vw 80px;
+}
+
+/* Spotlight / lens flare layers */
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 30%, rgba(166,43,43,0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 40% at 20% 80%, rgba(166,43,43,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, rgba(255,255,255,0.015) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+/* Noise texture */
+.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: .5; pointer-events: none; z-index: 0;
+}
+.hero-inner { position: relative; z-index: 2; max-width: 860px; }
+
+.hero-pre {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: .62rem; letter-spacing: .38em; text-transform: uppercase;
+  color: var(--crimson-2); margin-bottom: 36px;
+  opacity: 0; animation: fadeUp .8s .3s forwards;
+}
+.hero-pre::before, .hero-pre::after {
+  content: ""; width: 40px; height: 1px; background: var(--crimson-3);
+}
+
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(3.2rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: .92;
+  letter-spacing: .08em;
+  color: var(--smoke);
+  margin-bottom: 28px;
+  opacity: 0; animation: fadeUp .9s .5s forwards;
+}
+.hero-title .line-2 {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(253,251,247,0.25);
+  font-size: 90%;
+}
+
+.hero-tag {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  font-style: italic;
+  color: var(--silver);
+  letter-spacing: .04em;
+  margin-bottom: 56px;
+  opacity: 0; animation: fadeUp .9s .7s forwards;
+}
+
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 16px;
+  background: var(--crimson);
+  color: var(--smoke);
+  font-family: 'Cinzel', serif;
+  font-size: .75rem; font-weight: 600;
+  letter-spacing: .28em; text-transform: uppercase;
+  padding: 18px 44px;
+  border: 1px solid var(--crimson);
+  position: relative; overflow: hidden;
+  transition: letter-spacing .3s;
+  opacity: 0; animation: fadeUp .9s .9s forwards;
+}
+.hero-cta::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform .5s;
+}
+.hero-cta:hover { letter-spacing: .36em; }
+.hero-cta:hover::before { transform: translateX(100%); }
+.hero-cta-arrow { font-size: 1rem; transition: transform .3s; }
+.hero-cta:hover .hero-cta-arrow { transform: translateX(5px); }
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: .58rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--dim); z-index: 2;
+  opacity: 0; animation: fadeIn 1s 1.6s forwards;
+}
+.scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--crimson-3), transparent);
+  animation: scrollPulse 2s 1.8s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: .4; transform: scaleY(1); }
+  50%       { opacity: 1;  transform: scaleY(1.15); }
+}
+
+/* ═══════════════════════════════════════════
+   SECTION SHARED
+═══════════════════════════════════════════ */
+.section { padding: 120px 6vw; }
+.section-eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: .6rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--crimson-2); margin-bottom: 20px;
+}
+.section-eyebrow::after { content: ""; width: 32px; height: 1px; background: var(--crimson-3); }
+.section-h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 600; line-height: 1.1;
+  color: var(--smoke); margin-bottom: 16px;
+}
+.section-h2 em { color: transparent; -webkit-text-stroke: 1px rgba(253,251,247,0.3); font-style: normal; }
+.section-sub {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem; font-style: italic;
+  color: var(--silver); max-width: 500px;
+}
+
+/* ═══════════════════════════════════════════
+   STATEMENT / DIVIDER
+═══════════════════════════════════════════ */
+.statement {
+  padding: 80px 6vw;
+  display: flex; align-items: center; justify-content: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--black-2);
+  text-align: center;
+  position: relative;
+}
+.statement::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 100% at 50% 50%, rgba(166,43,43,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.statement-quote {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(1.35rem, 3.5vw, 2.2rem);
+  font-style: italic;
+  color: var(--smoke);
+  max-width: 780px;
+  line-height: 1.55;
+  position: relative; z-index: 1;
+}
+.statement-quote strong { color: var(--crimson-2); font-style: normal; font-weight: 500; }
+
+/* ═══════════════════════════════════════════
+   THE LIBRARY — BOOKS GRID
+═══════════════════════════════════════════ */
+.library { background: var(--black-2); }
+.library-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 64px; flex-wrap: wrap; gap: 20px;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+/* BOOK CARD */
+.book-card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: border-color .3s;
+  display:flex;
+flex-direction:column;
+height:auto;
+}
+.book-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(166,43,43,0.08) 0%, transparent 70%);
+  opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 1;
+}
+.book-card:hover { border-color: var(--border-c); }
+.book-card:hover::before { opacity: 1; }
+
+/* Cover placeholder — replace with real art */
+.coming-soon{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+height:560px;
+    background:linear-gradient(180deg,#111,#050505);
+    border:1px solid rgba(180,40,40,.25);
+}
+
+.coming-vol{
+color:#b52a2a;
+    font-size:18px;
+    letter-spacing:6px;
+    font-weight:700;
+}
+
+.coming-vol{
+    margin-top:16px;
+    color:#666;
+    font-size:48px;
+    font-family:Georgia,serif;
+}
+.book-cover{
+    position:relative;
+    width:100%;
+    height:560px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.book-cover-bg {
+  position: absolute; inset: 0;
+  transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+}
+.book-card:hover .book-cover-bg { transform: scale(1.06); }
+.book-cover-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.2) 50%, transparent 100%);
+  z-index: 1;
+}
+/* Cover art for each book — cinematic gradients */
+.cover-1 .book-cover-bg {
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 40%, #1a0808 0%, transparent 60%),
+    linear-gradient(160deg, #0d0305 0%, #1c0808 40%, #050505 100%);
+}
+.cover-2 .book-cover-bg {
+  background:
+    radial-gradient(ellipse 60% 60% at 70% 30%, #0f0a14 0%, transparent 60%),
+    linear-gradient(200deg, #06030d 0%, #120818 50%, #050505 100%);
+}
+.cover-3 .book-cover-bg {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 60%, #141008 0%, transparent 60%),
+    linear-gradient(140deg, #050503 0%, #1a1408 50%, #050505 100%);
+}
+.cover-4 .book-cover-bg {
+  background:
+    radial-gradient(ellipse 70% 70% at 20% 50%, #0a0f14 0%, transparent 60%),
+    linear-gradient(170deg, #030508 0%, #0a0e14 50%, #050505 100%);
+}
+
+/* Large roman numeral on cover */
+.book-cover-num {
+  position: relative; z-index: 2;
+  font-family: 'Cinzel', serif;
+  font-size: 5rem; font-weight: 900;
+  color: rgba(253,251,247,0.04);
+  letter-spacing: .1em;
+  user-select: none;
+}
+/* Small label on cover */
+.book-cover-label {
+  position: absolute; bottom: 20px; left: 20px; right: 20px;
+  z-index: 3;
+  font-family: 'Cinzel', serif;
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(253,251,247,0.4);
+  border-top: 1px solid rgba(253,251,247,0.1);
+  padding-top: 10px;
+}
+
+/* Card body */
+.book-body { padding: 24px 22px 22px; position: relative; z-index: 2; }
+.book-genre {
+  font-size: .58rem; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--crimson-2); margin-bottom: 10px;
+}
+.book-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--smoke); line-height: 1.25;
+  margin-bottom: 10px;
+}
+.book-hook {
+  font-family: 'EB Garamond', serif;
+  font-size: .95rem; font-style: italic;
+  color: var(--silver); line-height: 1.6;
+  margin-bottom: 22px;
+  min-height: 48px;
+}
+.book-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border); padding-top: 18px;
+}
+.book-price {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem; font-weight: 600;
+  color: var(--smoke);
+}
+.book-price span { font-size: .7rem; color: var(--dim); font-weight: 400; margin-left: 3px; }
+.buy-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border-c);
+  color: var(--smoke);
+  font-family: 'Cinzel', serif;
+  font-size: .65rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background .25s, border-color .25s, color .25s;
+  white-space: nowrap;
+}
+.buy-btn:hover {
+  background: var(--crimson);
+  border-color: var(--crimson);
+  color: var(--smoke);
+}
+.buy-btn svg { transition: transform .2s; }
+.buy-btn:hover svg { transform: translateX(3px); }
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+.about { background: var(--black); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+.about-visual {
+  position: relative;
+  aspect-ratio: 3/4;
+  max-width: 420px;
+}
+.about-visual-box {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #0d0305, #1a0a0a, #050505);
+  border: 1px solid var(--border);
+}
+.about-visual-box::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 40% 40%, rgba(166,43,43,0.12) 0%, transparent 70%);
+}
+.about-visual-num {
+  position: absolute; bottom: 20px; right: 24px;
+  font-family: 'Cinzel', serif;
+  font-size: 6rem; font-weight: 900;
+  color: rgba(166,43,43,0.08);
+  line-height: 1; user-select: none;
+}
+.about-visual-tag {
+  position: absolute; top: 24px; left: 24px;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--dim); border-bottom: 1px solid var(--border);
+  padding-bottom: 10px; width: calc(100% - 48px);
+}
+.about-text { }
+.about-body {
+  font-size: .97rem; color: var(--silver); line-height: 1.9;
+  margin: 24px 0 36px;
+}
+.about-body p + p { margin-top: 16px; }
+.about-body strong { color: var(--smoke); font-weight: 500; }
+.about-sig {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.4rem; font-style: italic;
+  color: var(--crimson-2);
+  letter-spacing: .04em;
+}
+
+/* ═══════════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════════ */
+.testimonials {
+  background: var(--black-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.t-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border);
+  margin-top: 56px;
+}
+.t-card {
+  background: var(--panel);
+  padding: 36px 28px;
+  transition: background .3s;
+}
+.t-card:hover { background: var(--black-3); }
+.t-stars {
+  font-size: .7rem; color: var(--crimson-2);
+  letter-spacing: .12em; margin-bottom: 16px;
+}
+.t-quote {
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--silver); line-height: 1.75;
+  margin-bottom: 20px;
+}
+.t-author {
+  font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ═══════════════════════════════════════════
+   NEWSLETTER
+═══════════════════════════════════════════ */
+.newsletter {
+  background: var(--black);
+  position: relative; overflow: hidden;
+}
+.newsletter::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(166,43,43,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.newsletter-inner {
+  max-width: 560px; margin: 0 auto; text-align: center;
+  position: relative; z-index: 1;
+}
+.newsletter-h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 600; color: var(--smoke);
+  margin-bottom: 14px;
+}
+.newsletter-sub {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem; font-style: italic;
+  color: var(--silver); margin-bottom: 36px;
+}
+.newsletter-form {
+  display: flex; gap: 0;
+  border: 1px solid var(--border-c);
+  overflow: hidden;
+}
+.newsletter-form input {
+  flex: 1;
+  background: transparent;
+  border: none; outline: none;
+  padding: 15px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: .88rem; color: var(--smoke);
+  caret-color: var(--crimson);
+}
+.newsletter-form input::placeholder { color: var(--dim); }
+.newsletter-form button {
+  background: var(--crimson);
+  border: none; cursor: pointer;
+  padding: 15px 24px;
+  font-family: 'Cinzel', serif;
+  font-size: .65rem; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--smoke);
+  transition: background .2s;
+  white-space: nowrap;
+}
+.newsletter-form button:hover { background: var(--crimson-2); }
+.newsletter-note {
+  font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--dim); margin-top: 14px;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  background: var(--black-2);
+  border-top: 1px solid var(--border);
+  padding: 60px 6vw 36px;
+}
+.footer-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  flex-wrap: wrap; gap: 40px; margin-bottom: 56px;
+}
+.footer-brand { max-width: 280px; }
+.footer-logo {
+  font-family: 'Cinzel', serif;
+  font-size: .88rem; font-weight: 700;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--smoke); margin-bottom: 14px;
+}
+.footer-logo span { color: var(--crimson); }
+.footer-tagline {
+  font-family: 'EB Garamond', serif;
+  font-size: .95rem; font-style: italic;
+  color: var(--dim);
+}
+.footer-links { display: flex; gap: 60px; flex-wrap: wrap; }
+.footer-col h4 {
+  font-size: .6rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--crimson-2); margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul a {
+  font-size: .8rem; color: var(--dim);
+  transition: color .2s;
+}
+.footer-col ul a:hover { color: var(--smoke); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-size: .68rem; letter-spacing: .1em;
+  color: var(--dim); text-transform: uppercase;
+}
+.footer-age {
+  border: 1px solid var(--border-c);
+  color: var(--crimson-3);
+  padding: 5px 12px;
+  font-size: .6rem; letter-spacing: .14em;
+}
+
+/* ═══════════════════════════════════════════
+   MODAL — checkout overlay
+═══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(5,5,5,0.88);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+  padding: 20px;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border-c);
+  width: 100%; max-width: 440px;
+  padding: 40px 36px;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform .35s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-close {
+  position: absolute; top: 16px; right: 20px;
+  background: none; border: none; cursor: pointer;
+  font-size: 1.2rem; color: var(--dim);
+  transition: color .2s;
+}
+.modal-close:hover { color: var(--smoke); }
+.modal-eyebrow {
+  font-size: .6rem; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--crimson-2); margin-bottom: 14px;
+}
+.modal-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem; font-weight: 600;
+  color: var(--smoke); margin-bottom: 6px;
+}
+.modal-hook {
+  font-family: 'EB Garamond', serif;
+  font-size: .95rem; font-style: italic;
+  color: var(--silver); margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-price-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px;
+}
+.modal-price {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--smoke);
+}
+.modal-format {
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim); border: 1px solid var(--border);
+  padding: 5px 10px;
+}
+.modal-email-label {
+  font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim); display: block; margin-bottom: 6px;
+}
+.modal-email-input {
+  width: 100%; background: var(--black);
+  border: 1px solid var(--border-c);
+  padding: 12px 14px; color: var(--smoke);
+  font-family: 'Inter', sans-serif; font-size: .9rem;
+  outline: none; margin-bottom: 18px;
+  transition: border-color .2s;
+}
+.modal-email-input:focus { border-color: var(--crimson); }
+.modal-checkout-btn {
+  width: 100%;
+  background: var(--crimson);
+  border: 1px solid var(--crimson);
+  color: var(--smoke);
+  font-family: 'Cinzel', serif;
+  font-size: .72rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  padding: 16px;
+  cursor: pointer;
+  transition: background .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.modal-checkout-btn:hover { background: var(--crimson-2); }
+.modal-checkout-btn.loading { opacity: .7; pointer-events: none; }
+.modal-secure {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 14px;
+  font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim);
+}
+.modal-secure svg { color: var(--dim); }
+
+/* ═══════════════════════════════════════════
+   MOBILE NAV DRAWER
+═══════════════════════════════════════════ */
+.mobile-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 280px;
+  background: var(--panel);
+  border-left: 1px solid var(--border-c);
+  z-index: 600;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  padding: 80px 32px 40px;
+}
+.mobile-drawer.open { transform: translateX(0); }
+.mobile-drawer ul { list-style: none; display: flex; flex-direction: column; gap: 24px; }
+.mobile-drawer a {
+  font-family: 'Cinzel', serif;
+  font-size: .9rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--silver); transition: color .2s;
+}
+.mobile-drawer a:hover { color: var(--smoke); }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Scroll-triggered */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+.reveal-left {
+  opacity: 0; transform: translateX(-32px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal-left.in { opacity: 1; transform: none; }
+.reveal-right {
+  opacity: 0; transform: translateX(32px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal-right.in { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-visual { max-width: 320px; }
+  .t-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  nav ul { display: none; }
+  .nav-menu-btn { display: flex; }
+  .books-grid { grid-template-columns: 1fr 1fr; }
+  .footer-links { flex-direction: column; gap: 32px; }
+  .footer-top { flex-direction: column; }
+}
+@media (max-width: 520px) {
+  .books-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 2.8rem; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form input { border-bottom: 1px solid var(--border-c); }
+  .cursor, .cursor-ring { display: none; }
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">The <span>Apertures</span></a>
+  <ul>
+    <li><a href="#library">Library</a></li>
+    <li><a href="#about">The Author</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#library" class="nav-buy">Buy Now</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="mobile-drawer" id="drawer">
+  <ul>
+    <li><a href="#library" onclick="closeDrawer()">Library</a></li>
+    <li><a href="#about" onclick="closeDrawer()">The Author</a></li>
+    <li><a href="#testimonials" onclick="closeDrawer()">Reviews</a></li>
+    <li><a href="#library" onclick="closeDrawer()">Buy Now</a></li>
+  </ul>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div class="hero-pre">An Independent Author</div>
+    <h1 class="hero-title">
+      The Apertures
+      <span class="line-2">The Apertures</span>
+    </h1>
+    <p class="hero-tag">Cinematic Romance. Uncensored Fantasies.</p>
+    <a href="#library" class="hero-cta">
+      Enter the Dark
+      <span class="hero-cta-arrow">→</span>
+    </a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ─── STATEMENT ─── -->
+<div class="statement">
+  <p class="statement-quote">
+    "Stories that linger long after the last page —
+    <strong>raw, intimate, and unapologetically bold.</strong>
+    Written for readers who want to feel something real."
+  </p>
+</div>
+
+<!-- ─── LIBRARY ─── -->
+<section class="section library" id="library">
+  <div class="library-header">
+    <div>
+      <div class="section-eyebrow reveal">The Library</div>
+      <h2 class="section-h2 reveal">Every Story <em>Burns</em></h2>
+      <p class="section-sub reveal">Instant PDF download. Read anywhere. No subscriptions.</p>
+    </div>
+  </div>
+
+  <div class="books-grid">
+
+    <article class="book-card cover-1 reveal" data-book="1">
+
+    <div class="book-cover">
+        <img src="images/Strangers_in_the_Dark.png"
+             alt="Strangers in the Dark">
+    </div>
+
+    <div class="book-body">
+        <div class="book-genre">Dark Romance • Erotica</div>
+
+        <h3 class="book-title">
+            Strangers in the Dark
+        </h3>
+
+        <p class="book-hook">
+            "She never got his name. She didn't want to."
+        </p>
+
+        <div class="book-footer">
+
+            <div class="book-price">
+                $3.99 <span>PDF</span>
+            </div>
+
+            <button
+                class="buy-btn"
+                onclick="openModal(
+                    'Strangers in the Dark',
+                    'She never got his name. She didn\\'t want to.',
+                    '₹399',
+                    'strangers-in-the-dark'
+                )">
+
+                Buy Now
+
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M1 6h10M6 1l5 5-5 5"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                    </path>
+                </svg>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</article>
+    <!-- Book 2 -->
+<article class="book-card cover-2 reveal reveal-delay-1" data-book="2">
+<div class="book-cover">
+    <img src="images/The_Quiet_After_The_Chaos.png"
+         alt="The Quiet After The Chaos">
+</div>
+  <div class="book-body">
+        <div class="book-genre">Slow Burn · Erotica</div>
+        <h3 class="book-title">The Quiet After the Chaos</h3>
+        <p class="book-hook">"Two broken people. One borrowed night. No rules."</p>
+        <div class="book-footer">
+          <div class="book-price">$3.99 <span>PDF</span></div>
+          <button class="buy-btn" onclick="openModal('The Quiet After the Chaos','Two broken people. One borrowed night. No rules.','₹399','quiet-after-chaos')">
+            Buy Now
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Book 3 -->
+    <article class="book-card cover-3 reveal reveal-delay-2" data-book="3">
+<div class="book-cover coming-soon">
+    <div class="coming-title">COMING SOON</div>
+    <div class="coming-vol">VOL. III</div>
+</div>
+      <div class="book-body">
+        <div class="book-genre">Forbidden · Erotica</div>
+        <h3 class="book-title">The Weight of Almost</h3>
+        <p class="book-hook">"Everything they wanted. Everything they couldn't have."</p>
+        <div class="book-footer">
+          <div class="book-price">$3.99 <span>PDF</span></div>
+          <button class="buy-btn" onclick="openModal('The Weight of Almost','Everything they wanted. Everything they couldn\'t have.','₹399','weight-of-almost')">
+            Buy Now
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Book 4 -->
+    <article class="book-card cover-4 reveal reveal-delay-3" data-book="4">
+<div class="book-cover coming-soon">
+    <div class="coming-title">COMING SOON</div>
+    <div class="coming-vol">VOL. IV</div>
+</div>
+      <div class="book-body">
+        <div class="book-genre">Psychological · Erotica</div>
+        <h3 class="book-title">Glass at Midnight</h3>
+        <p class="book-hook">"He watched her unravel. She let him."</p>
+        <div class="book-footer">
+          <div class="book-price">$4.99 <span>PDF</span></div>
+          <button class="buy-btn" onclick="openModal('Glass at Midnight','He watched her unravel. She let him.','₹499','glass-at-midnight')">
+            Buy Now
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal-left">
+      <div class="about-visual-box">
+        <div class="about-visual-tag">The Apertures — Author</div>
+        <div class="about-visual-num">TA</div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="section-eyebrow">The Author</div>
+      <h2 class="section-h2">Written in the <em>Dark</em></h2>
+      <div class="about-body">
+        <p>I write for the readers who have always felt that <strong>romance deserved more</strong> — more heat, more honesty, more of the things that people think in the dark but rarely say out loud.</p>
+        <p>Every story in The Apertures collection is built like a film. There is a mood before there is a plot. There is tension before there is touch. I believe in the slow build — the kind that makes the release feel earned.</p>
+        <p>These are <strong>not love stories.</strong> They are desire stories. And there is a difference.</p>
+      </div>
+      <div class="about-sig">— The Apertures</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section class="section testimonials" id="testimonials">
+  <div class="section-eyebrow reveal">Reader Reviews</div>
+  <h2 class="section-h2 reveal">What Readers <em>Say</em></h2>
+  <div class="t-grid">
+    <div class="t-card reveal">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"I read Strangers in the Dark in one sitting at 2am and did not regret a single minute. Cinematic is the exact right word."</p>
+      <div class="t-author">— u/inkstained_reader</div>
+    </div>
+    <div class="t-card reveal reveal-delay-1">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"The writing is gorgeous. Literary quality with heat that doesn't apologize for itself. Exactly what I've been looking for."</p>
+      <div class="t-author">— u/midnightpages_</div>
+    </div>
+    <div class="t-card reveal reveal-delay-2">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"The Quiet After the Chaos wrecked me. I didn't expect to feel this much. Buy it. You'll understand immediately."</p>
+      <div class="t-author">— u/velvet.reader</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEWSLETTER ─── -->
+<section class="section newsletter">
+  <div class="newsletter-inner">
+    <div class="section-eyebrow reveal" style="justify-content:center">The List</div>
+    <h2 class="newsletter-h2 reveal">First to Know.<br/>First to Feel.</h2>
+    <p class="newsletter-sub reveal">New releases, exclusive previews, and the occasional letter from the dark.</p>
+    <form class="newsletter-form reveal" onsubmit="handleNewsletter(event)">
+      <input type="email" placeholder="your@email.com" required/>
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="newsletter-note reveal">No spam. Unsubscribe anytime. 18+ only.</p>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">The <span>Apertures</span></div>
+      <p class="footer-tagline">Cinematic Romance.<br/>Uncensored Fantasies.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Library</h4>
+        <ul>
+          <li><a href="#library">Strangers in the Dark</a></li>
+          <li><a href="#library">The Quiet After the Chaos</a></li>
+          <li><a href="#library">The Weight of Almost</a></li>
+          <li><a href="#library">Glass at Midnight</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 The Apertures. All rights reserved.</span>
+    <span class="footer-age">18+ Adults Only</span>
+  </div>
+</footer>
+
+<!-- ─── CHECKOUT MODAL ─── -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-eyebrow">Secure Checkout</div>
+    <h3 class="modal-title" id="modalTitle">—</h3>
+    <p class="modal-hook" id="modalHook">—</p>
+    <div class="modal-price-row">
+      <div class="modal-price" id="modalPrice">—</div>
+      <div class="modal-format">PDF · Instant Delivery</div>
+    </div>
+    <label class="modal-email-label" for="checkoutEmail">Your Email (PDF sent here)</label>
+    <input class="modal-email-input" type="email" id="checkoutEmail" placeholder="your@email.com" required/>
+    <button class="modal-checkout-btn" id="checkoutBtn" onclick="startCheckout()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="5" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M4 5V3.5a3 3 0 0 1 6 0V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Complete Purchase
+    </button>
+    <div class="modal-secure">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+        <rect x=".5" y="4" width="10" height="6.5" rx=".8" stroke="currentColor" stroke-width="1"/>
+        <path d="M3 4V3a2.5 2.5 0 0 1 5 0v1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      Secured by Razorpay · UPI · Cards · Wallets
+    </div>
+  </div>
+</div>
+
+<!-- Razorpay Checkout SDK — must load before your JS -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+/* ════════════════════════════════════
+   CUSTOM CURSOR
+════════════════════════════════════ */
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+});
+
+// Ring follows with lag
+(function animRing() {
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+// Hover effect on interactive elements
+document.querySelectorAll('a, button, .book-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.classList.add('hover');
+    cursorRing.classList.add('hover');
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hover');
+    cursorRing.classList.remove('hover');
+  });
+});
+
+/* ════════════════════════════════════
+   NAV SCROLL EFFECT
+════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ════════════════════════════════════
+   MOBILE MENU
+════════════════════════════════════ */
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('drawer').classList.toggle('open');
+});
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+}
+
+/* ════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════ */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+  revealObs.observe(el);
+});
+
+/* ════════════════════════════════════
+   3D TILT ON BOOK CARDS
+════════════════════════════════════ */
+document.querySelectorAll('.book-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r    = card.getBoundingClientRect();
+    const x    = e.clientX - r.left;
+    const y    = e.clientY - r.top;
+    const cx   = r.width  / 2;
+    const cy   = r.height / 2;
+    const rotX = ((y - cy) / cy) * -5;
+    const rotY = ((x - cx) / cx) *  5;
+    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(6px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+/* ════════════════════════════════════
+   MODAL
+════════════════════════════════════ */
+let currentBookId = '';
+
+function openModal(title, hook, price, bookId) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalHook').textContent  = hook;
+  document.getElementById('modalPrice').textContent = price;
+  currentBookId = bookId;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('checkoutEmail').focus(), 350);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ════════════════════════════════════
+   CHECKOUT — Razorpay flow
+   Step 1: Our backend creates a Razorpay Order
+   Step 2: We open Razorpay's checkout popup
+   Step 3: On payment success, we POST the
+           payment signature to our backend
+           for verification + PDF delivery
+════════════════════════════════════ */
+async function startCheckout() {
+  const email = document.getElementById('checkoutEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('checkoutEmail').style.borderColor = 'var(--crimson)';
+    document.getElementById('checkoutEmail').focus();
+    return;
+  }
+  document.getElementById('checkoutEmail').style.borderColor = '';
+
+  const btn = document.getElementById('checkoutBtn');
+  btn.classList.add('loading');
+  btn.innerHTML = 'Opening Checkout…';
+
+  try {
+    // ── 1. Create Razorpay order on our backend ──
+    const res = await fetch('/api/checkout', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ bookId: currentBookId, email })
+    });
+    const order = await res.json();
+    if (!order.id) throw new Error(order.error || 'Order creation failed');
+
+    btn.classList.remove('loading');
+    btn.innerHTML = 'Complete Purchase';
+
+    // ── 2. Open Razorpay popup ──
+    const options = {
+      key:         order.keyId,       // your Razorpay Key ID (public)
+      amount:      order.amount,      // in paise, returned by backend
+      currency:    order.currency,
+      name:        'The Apertures',
+      description: order.bookTitle,
+      order_id:    order.id,          // Razorpay order ID
+      prefill: {
+        email,
+        contact: ''                   // optional — reader can fill
+      },
+      theme: {
+        color:            '#a62b2b',
+        backdrop_color:   'rgba(5,5,5,0.92)',
+        hide_topbar:      false
+      },
+      modal: {
+        // If reader closes the popup, just stay on the page
+        ondismiss: () => {
+          btn.innerHTML = 'Complete Purchase';
+          btn.classList.remove('loading');
+        }
+      },
+
+      // ── 3. Payment success handler ──
+      handler: async function(response) {
+        // Razorpay returns three values we must send to backend for verification
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
+
+        btn.classList.add('loading');
+        btn.innerHTML = 'Verifying Payment…';
+        closeModal();
+
+        try {
+          const verify = await fetch('/api/verify-payment', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+              razorpay_order_id,
+              razorpay_payment_id,
+              razorpay_signature,
+              email,
+              bookId: currentBookId
+            })
+          });
+          const result = await verify.json();
+
+          if (result.success) {
+            window.location.href = '/success';
+          } else {
+            throw new Error(result.error || 'Verification failed');
+          }
+        } catch (err) {
+          // Show error on page without losing state
+          showPaymentError('Payment was received but verification failed. Please email us with your payment ID: ' + razorpay_payment_id);
+        }
+      }
+    };
+
+    const rzp = new Razorpay(options);
+
+    // Handle payment failures inside the popup
+    rzp.on('payment.failed', function(response) {
+      console.error('[Razorpay] Payment failed:', response.error);
+      showPaymentError('Payment failed: ' + (response.error.description || 'Please try again.'));
+    });
+
+    rzp.open();
+
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.innerHTML = '⚠ Error — Try Again';
+    console.error('[Checkout]', err.message);
+    setTimeout(() => { btn.innerHTML = 'Complete Purchase'; }, 3000);
+  }
+}
+
+function showPaymentError(msg) {
+  // Inject a small error banner below the modal if still visible
+  let banner = document.getElementById('payErrBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'payErrBanner';
+    banner.style.cssText = `
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+      background:#1a0505;border:1px solid #a62b2b;color:#fdfbf7;
+      padding:14px 24px;font-size:.82rem;letter-spacing:.06em;
+      z-index:900;max-width:90vw;text-align:center;
+    `;
+    document.body.appendChild(banner);
+  }
+  banner.textContent = msg;
+  banner.style.display = 'block';
+  setTimeout(() => { if (banner) banner.style.display = 'none'; }, 8000);
+}
+
+/* ════════════════════════════════════
+   NEWSLETTER (stub — wire to backend)
+════════════════════════════════════ */
+function handleNewsletter(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '✓ You\'re on the list';
+  btn.style.background = '#1f4a1f';
+  e.target.querySelector('input').value = '';
+}
+</script>
+</body>
+</html>
