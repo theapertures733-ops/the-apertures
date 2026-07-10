@@ -471,9 +471,11 @@ color:#b52a2a;
   gap: 80px; align-items: center;
 }
 .about-visual {
-  position: relative;
-  aspect-ratio: 3/4;
-  max-width: 420px;
+    position: relative;
+    aspect-ratio: 3/4;
+    max-width: 420px;
+    overflow: hidden;
+    border-radius: 12px;
 }
 .about-visual-box {
   position: absolute; inset: 0;
@@ -1030,11 +1032,10 @@ footer {
 <!-- ─── ABOUT ─── -->
 <section class="section about" id="about">
   <div class="about-grid">
-    <div class="about-visual reveal-left">
-      <div class="about-visual-box">
-        <div class="about-visual-tag">The Apertures — Author</div>
-        <div class="about-visual-num">TA</div>
-      </div>
+<div class="about-visual reveal-left">
+    <img src="images/author.png" alt="The Apertures Author" class="author-image">
+</div>
+  </div>
     </div>
     <div class="reveal-right">
       <div class="section-eyebrow">The Author</div>
