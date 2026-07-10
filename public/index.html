@@ -470,10 +470,6 @@ display:block;
    ABOUT
 ═══════════════════════════════════════════ */
 .about { background: var(--black); }
-.about-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center;
-}
 .about-grid{
 display:grid;
 grid-template-columns:340px 1fr;
@@ -820,8 +816,8 @@ footer {
 @media (max-width: 960px) {
   .about-grid { grid-template-columns: 1fr; gap: 48px; }
 .about-visual{
-max-width:340px;
-margin:auto;
+    max-width:340px;
+    margin:auto;
 }
   .t-grid { grid-template-columns: 1fr; }
 }
