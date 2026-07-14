@@ -43,7 +43,7 @@ const razorpay = new Razorpay({
    bookId   = the string used in index.html Buy Now buttons
    file     = filename inside /pdfs/ folder on your server
    filename = what the reader sees when they download
-   amount   = price in PAISE (₹399 = 39900, ₹499 = 49900)
+   amount   = price in PAISE — TEMPORARILY ₹1 (100 paise) FOR LIVE PAYMENT TESTING
    currency = always INR for India
 ════════════════════════════════════════════════════════ */
 const BOOKS = {
@@ -51,28 +51,28 @@ const BOOKS = {
     title:    'Strangers in the Dark',
     file:     'strangers-in-the-dark.pdf',
     filename: 'The-Apertures-Vol1-Strangers-in-the-Dark.pdf',
-    amount:   39900,   // ₹399.00 in paise
+    amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
   },
   'quiet-after-chaos': {
     title:    'The Quiet After the Chaos',
     file:     'quiet-after-chaos.pdf',
     filename: 'The-Apertures-Vol2-The-Quiet-After-The-Chaos.pdf',
-    amount:   39900,
+    amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
   },
   'weight-of-almost': {
     title:    'The Weight of Almost',
     file:     'weight-of-almost.pdf',
     filename: 'The-Apertures-Vol3-The-Weight-Of-Almost.pdf',
-    amount:   39900,
+    amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
   },
   'glass-at-midnight': {
     title:    'Glass at Midnight',
     file:     'glass-at-midnight.pdf',
     filename: 'The-Apertures-Vol4-Glass-At-Midnight.pdf',
-    amount:   49900,   // ₹499.00
+    amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
   },
 };
