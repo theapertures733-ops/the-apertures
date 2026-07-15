@@ -109,12 +109,60 @@ setInterval(() => {
      Postmark: postmarkapp.com (100/month free)
    Just swap the transport config if you change provider.
 ════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════
+   EMAIL TRANSPORTER
+   Bug fixed: previous version used process.env.theapertures733@gmail.com
+   which is a JS syntax error — @gmail.com terminates the property name,
+   evaluating to undefined. Nodemailer then attempts SMTP auth with
+   user=undefined, which Gmail rejects with a TCP timeout (ENETUNREACH).
+
+   Fix: use the correct env var names EMAIL_FROM + EMAIL_APP_PASSWORD.
+
+   Also switched from service:'gmail' shorthand to explicit host/port/tls
+   so the connection is fully debuggable and works on Render's network.
+   Port 587 + STARTTLS is the correct config for Gmail App Passwords on
+   cloud hosts (port 465/SSL is blocked by some providers including Render).
+════════════════════════════════════════════════════════ */
 const mailer = nodemailer.createTransport({
-  service: 'gmail',
+  host:   'smtp.gmail.com',
+  port:   587,
+  secure: false,   // STARTTLS on port 587 (NOT SSL on 465)
   auth: {
-    user: process.env.EMAIL_FROM,
-    pass: process.env.EMAIL_APP_PASSWORD,
+    user: process.env.EMAIL_FROM,           // theapertures733@gmail.com
+    pass: process.env.EMAIL_APP_PASSWORD,   // 16-char App Password from Google
   },
+  tls: {
+    rejectUnauthorized: true,  // enforce valid TLS cert (security)
+  },
+  connectionTimeout: 10000,    // 10s — fail fast if SMTP is unreachable
+  greetingTimeout:   8000,
+  socketTimeout:     15000,
+});
+
+/* Verify SMTP connection at startup — fail loudly here, not silently at payment time */
+mailer.verify(function (err, success) {
+  if (err) {
+    console.error('╔══════════════════════════════════════════╗');
+    console.error('║  [✗ SMTP VERIFY FAILED]                  ║');
+    console.error('╚══════════════════════════════════════════╝');
+    console.error('  Message :', err.message);
+    console.error('  Code    :', err.code);
+    console.error('  Command :', err.command || 'n/a');
+    console.error('  Response:', err.response || 'n/a');
+    console.error('  Stack   :', err.stack);
+    console.error('');
+    console.error('  Checklist:');
+    console.error('  1. Is EMAIL_FROM set in Render env vars?  Value:', process.env.EMAIL_FROM || '(MISSING)');
+    console.error('  2. Is EMAIL_APP_PASSWORD set?             Value:', process.env.EMAIL_APP_PASSWORD ? '(set, ' + process.env.EMAIL_APP_PASSWORD.length + ' chars)' : '(MISSING)');
+    console.error('  3. Gmail 2-Step Verification enabled?');
+    console.error('  4. App Password generated at: myaccount.google.com → Security → App Passwords');
+    console.error('  5. "Less secure app access" is NOT needed — App Password replaces it');
+  } else {
+    console.log('╔══════════════════════════════════════════╗');
+    console.log('║  [✓ SMTP Connected & Authenticated]      ║');
+    console.log('╚══════════════════════════════════════════╝');
+    console.log('  From:', process.env.EMAIL_FROM);
+  }
 });
 
 async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
@@ -179,14 +227,24 @@ async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
 </html>
   `;
 
-  await mailer.sendMail({
+  console.log(`[Email] Attempting to send → ${toEmail} | Book: ${bookTitle}`);
+  console.log(`[Email] Download URL: ${downloadUrl}`);
+  console.log(`[Email] From: ${process.env.EMAIL_FROM}`);
+
+  const info = await mailer.sendMail({
     from:    `"The Apertures" <${process.env.EMAIL_FROM}>`,
     to:      toEmail,
     subject: `Your download is ready — ${bookTitle}`,
     html,
   });
 
-  console.log(`[✓] Email sent → ${toEmail} | Book: ${bookTitle}`);
+  console.log(`[✓ Email Sent]`);
+  console.log(`  To         : ${toEmail}`);
+  console.log(`  Book       : ${bookTitle}`);
+  console.log(`  Message ID : ${info.messageId}`);
+  console.log(`  Response   : ${info.response}`);
+  console.log(`  Accepted   : ${JSON.stringify(info.accepted)}`);
+  console.log(`  Rejected   : ${JSON.stringify(info.rejected)}`);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -312,10 +370,22 @@ app.post('/api/verify-payment', async (req, res) => {
     await sendDownloadEmail(email, book.title, downloadUrl);
     res.json({ success: true });
   } catch (err) {
-    console.error('[Delivery Error]', err.message);
-    // Payment is verified but email failed.
-    // Return 500 so the frontend shows an error with the payment ID,
-    // so the reader can contact you to get their book manually.
+    // Payment is verified — the money was taken — but email failed.
+    // Log the full error object so you can debug without guessing.
+    console.error('[✗ Delivery Error]');
+    console.error('  Message      :', err.message);
+    console.error('  Code         :', err.code         || 'n/a');
+    console.error('  Command      :', err.command       || 'n/a');
+    console.error('  Response     :', err.response      || 'n/a');
+    console.error('  ResponseCode :', err.responseCode  || 'n/a');
+    console.error('  Stack        :', err.stack);
+    console.error('  Full error   :', JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    console.error('  Checklist:');
+    console.error('    EMAIL_FROM         =', process.env.EMAIL_FROM        || '(MISSING)');
+    console.error('    EMAIL_APP_PASSWORD =', process.env.EMAIL_APP_PASSWORD ? '(set)' : '(MISSING)');
+    console.error('    BASE_URL           =', process.env.BASE_URL           || '(MISSING)');
+    // Return 500 so the frontend shows the payment ID.
+    // Reader can contact you to get their book manually.
     res.status(500).json({
       success: false,
       error:   'Payment confirmed but email delivery failed. Contact support.',
@@ -391,7 +461,12 @@ app.post('/api/webhook/razorpay', async (req, res) => {
     await sendDownloadEmail(email, book.title, downloadUrl);
     console.log(`[✓ Webhook Delivered] ${paymentId} | ${book.title} | ${email}`);
   } catch (err) {
-    console.error('[Webhook Email Error]', err.message);
+    console.error('[✗ Webhook Email Error]');
+    console.error('  Message      :', err.message);
+    console.error('  Code         :', err.code         || 'n/a');
+    console.error('  Response     :', err.response      || 'n/a');
+    console.error('  ResponseCode :', err.responseCode  || 'n/a');
+    console.error('  Stack        :', err.stack);
     // Don't return non-200 — Razorpay retries webhooks on failure
     // which would cause duplicate deliveries. Log and investigate manually.
   }
@@ -518,6 +593,32 @@ a{display:inline-block;margin-top:28px;color:#a62b2b;font-size:.75rem;
    START
 ════════════════════════════════════════════════════════ */
 const PORT = process.env.PORT || 3000;
+
+/* Startup config check — warn immediately if BASE_URL is wrong */
+(function checkConfig() {
+  const baseUrl = process.env.BASE_URL || '';
+  if (!baseUrl || baseUrl.includes('localhost')) {
+    console.warn('');
+    console.warn('╔══════════════════════════════════════════════════════════╗');
+    console.warn('║  [⚠ CONFIG WARNING]                                      ║');
+    console.warn('║  BASE_URL is set to: ' + (baseUrl || '(MISSING)').padEnd(36) + '║');
+    console.warn('║  This is a localhost URL. Download links in emails will  ║');
+    console.warn('║  point to the customer's own machine and will NOT work.  ║');
+    console.warn('║                                                          ║');
+    console.warn('║  Set BASE_URL to your Render domain in the Render        ║');
+    console.warn('║  dashboard → Environment, e.g.:                         ║');
+    console.warn('║  https://the-apertures-api.onrender.com                 ║');
+    console.warn('╚══════════════════════════════════════════════════════════╝');
+    console.warn('');
+  }
+  if (!process.env.EMAIL_FROM) {
+    console.error('[✗ CONFIG] EMAIL_FROM is not set in environment variables');
+  }
+  if (!process.env.EMAIL_APP_PASSWORD) {
+    console.error('[✗ CONFIG] EMAIL_APP_PASSWORD is not set in environment variables');
+  }
+})();
+
 app.listen(PORT, () => {
   console.log(`
 ╔══════════════════════════════════════════╗
