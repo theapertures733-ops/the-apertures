@@ -19,9 +19,10 @@
 'use strict';
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log("KEY ID =", process.env.RAZORPAY_KEY_ID);
+console.log("SECRET =", process.env.RAZORPAY_KEY_SECRET);
 const express    = require('express');
 const Razorpay   = require('razorpay');
-const { Resend } = require('resend');
+const { Resend }  = require('resend');
 const crypto     = require('crypto');
 const path       = require('path');
 const fs         = require('fs');
@@ -48,14 +49,14 @@ const razorpay = new Razorpay({
 const BOOKS = {
   'strangers-in-the-dark': {
     title:    'Strangers in the Dark',
-    file:     'strangers-in-the-dark.pdf',
+    file: 'Strangers_in_the_Dark.pdf',
     filename: 'The-Apertures-Vol1-Strangers-in-the-Dark.pdf',
     amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
   },
   'quiet-after-chaos': {
     title:    'The Quiet After the Chaos',
-    file:     'quiet-after-chaos.pdf',
+    file: 'The_Quiet_After_The_Chaos.pdf',
     filename: 'The-Apertures-Vol2-The-Quiet-After-The-Chaos.pdf',
     amount:   100,     // ₹1.00 in paise — TEST MODE
     currency: 'INR',
@@ -103,9 +104,28 @@ setInterval(() => {
 /* ════════════════════════════════════════════════════════
    EMAIL — Resend (resend.com)
    Uses HTTPS on port 443. No SMTP. Works on Render.
-   Required env vars: RESEND_API_KEY, EMAIL_FROM
+   Required env vars:
+     RESEND_API_KEY  — from resend.com dashboard
+     EMAIL_FROM      — verified sender address
+                       sandbox: onboarding@resend.dev
+                       production: you@yourdomain.com
 ════════════════════════════════════════════════════════ */
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+/* Confirm Resend is configured at startup */
+(function checkResend() {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('╔══════════════════════════════════════════╗');
+    console.error('║  [✗ RESEND_API_KEY not set]              ║');
+    console.error('║  Email delivery will fail.               ║');
+    console.error('╚══════════════════════════════════════════╝');
+  } else {
+    console.log('╔══════════════════════════════════════════╗');
+    console.log('║  [✓ Resend ready]                        ║');
+    console.log('╚══════════════════════════════════════════╝');
+    console.log('  From:', process.env.EMAIL_FROM || '(EMAIL_FROM not set)');
+  }
+})();
 
 async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
   const html = `
@@ -170,6 +190,8 @@ async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
   `;
 
   console.log(`[Email] Sending via Resend → ${toEmail} | ${bookTitle}`);
+  console.log(`[Email] From        : ${process.env.EMAIL_FROM}`);
+  console.log(`[Email] Download URL: ${downloadUrl}`);
 
   const { data, error } = await resend.emails.send({
     from:    process.env.EMAIL_FROM,
@@ -178,9 +200,15 @@ async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
     html,
   });
 
-  if (error) throw error;
-  console.log(data);
-  console.log(`[✓ Email Sent] ID: ${data.id} | To: ${toEmail}`);
+  if (error) {
+    console.error('[✗ Resend error object]:', JSON.stringify(error));
+    throw new Error(`Resend: ${error.message || JSON.stringify(error)}`);
+  }
+
+  console.log(`[✓ Email Sent via Resend]`);
+  console.log(`  To        : ${toEmail}`);
+  console.log(`  Book      : ${bookTitle}`);
+  console.log(`  Resend ID : ${data.id}`);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -303,11 +331,7 @@ app.post('/api/verify-payment', async (req, res) => {
   try {
     const token       = createDownloadToken(bookId);
     const downloadUrl = `${process.env.BASE_URL}/download/${token}`;
-    console.log("STEP 1 - About to send email");
-
-await sendDownloadEmail(email, book.title, downloadUrl);
-
-console.log("STEP 2 - Email function completed");
+    await sendDownloadEmail(email, book.title, downloadUrl);
     res.json({ success: true });
   } catch (err) {
     // Payment is verified — the money was taken — but email failed.
@@ -322,6 +346,7 @@ console.log("STEP 2 - Email function completed");
     console.error('  Full error   :', JSON.stringify(err, Object.getOwnPropertyNames(err)));
     console.error('  Checklist:');
     console.error('    EMAIL_FROM         =', process.env.EMAIL_FROM        || '(MISSING)');
+    console.error('    RESEND_API_KEY     =', process.env.RESEND_API_KEY ? '(set)' : '(MISSING)');
     console.error('    BASE_URL           =', process.env.BASE_URL           || '(MISSING)');
     // Return 500 so the frontend shows the payment ID.
     // Reader can contact you to get their book manually.
@@ -542,7 +567,7 @@ const PORT = process.env.PORT || 3000;
     console.warn('║  [⚠ CONFIG WARNING]                                      ║');
     console.warn('║  BASE_URL is set to: ' + (baseUrl || '(MISSING)').padEnd(36) + '║');
     console.warn('║  This is a localhost URL. Download links in emails will  ║');
-    console.warn('║  point to the customer\'s own machine and will NOT work.  ║');
+    console.warn('║  point to the customer's own machine and will NOT work.  ║');
     console.warn('║                                                          ║');
     console.warn('║  Set BASE_URL to your Render domain in the Render        ║');
     console.warn('║  dashboard → Environment, e.g.:                         ║');
