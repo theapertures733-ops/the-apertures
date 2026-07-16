@@ -1,6 +1,6 @@
 /**
  * THE APERTURES — Backend Server (Razorpay Edition)
- * Node.js + Express + Razorpay + Nodemailer
+ * Node.js + Express + Razorpay + Resend
  *
  * PAYMENT FLOW:
  * 1. Reader clicks Buy Now → modal opens
@@ -13,16 +13,15 @@
  * 8. On verified → generate one-time download token → email PDF link
  *
  * INSTALL:
- * npm install express razorpay nodemailer dotenv crypto
+ * npm install express razorpay resend dotenv crypto
  */
 
 'use strict';
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log("KEY ID =", process.env.RAZORPAY_KEY_ID);
-console.log("SECRET =", process.env.RAZORPAY_KEY_SECRET);
 const express    = require('express');
 const Razorpay   = require('razorpay');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const crypto     = require('crypto');
 const path       = require('path');
 const fs         = require('fs');
@@ -102,20 +101,11 @@ setInterval(() => {
 }, 60 * 60 * 1000);
 
 /* ════════════════════════════════════════════════════════
-   EMAIL — Nodemailer via Gmail App Password
-   Alternative providers (all free tiers available):
-     Resend: resend.com (100 emails/day free)
-     SendGrid: sendgrid.com (100/day free)
-     Postmark: postmarkapp.com (100/month free)
-   Just swap the transport config if you change provider.
+   EMAIL — Resend (resend.com)
+   Uses HTTPS on port 443. No SMTP. Works on Render.
+   Required env vars: RESEND_API_KEY, EMAIL_FROM
 ════════════════════════════════════════════════════════ */
-const mailer = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_FROM,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
   const html = `
@@ -179,14 +169,18 @@ async function sendDownloadEmail(toEmail, bookTitle, downloadUrl) {
 </html>
   `;
 
-  await mailer.sendMail({
-    from:    `"The Apertures" <${process.env.EMAIL_FROM}>`,
-    to:      toEmail,
+  console.log(`[Email] Sending via Resend → ${toEmail} | ${bookTitle}`);
+
+  const { data, error } = await resend.emails.send({
+    from:    process.env.EMAIL_FROM,
+    to:      [toEmail],
     subject: `Your download is ready — ${bookTitle}`,
     html,
   });
 
-  console.log(`[✓] Email sent → ${toEmail} | Book: ${bookTitle}`);
+  if (error) throw error;
+  console.log(data);
+  console.log(`[✓ Email Sent] ID: ${data.id} | To: ${toEmail}`);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -309,13 +303,28 @@ app.post('/api/verify-payment', async (req, res) => {
   try {
     const token       = createDownloadToken(bookId);
     const downloadUrl = `${process.env.BASE_URL}/download/${token}`;
-    await sendDownloadEmail(email, book.title, downloadUrl);
+    console.log("STEP 1 - About to send email");
+
+await sendDownloadEmail(email, book.title, downloadUrl);
+
+console.log("STEP 2 - Email function completed");
     res.json({ success: true });
   } catch (err) {
-    console.error('[Delivery Error]', err.message);
-    // Payment is verified but email failed.
-    // Return 500 so the frontend shows an error with the payment ID,
-    // so the reader can contact you to get their book manually.
+    // Payment is verified — the money was taken — but email failed.
+    // Log the full error object so you can debug without guessing.
+    console.error('[✗ Delivery Error]');
+    console.error('  Message      :', err.message);
+    console.error('  Code         :', err.code         || 'n/a');
+    console.error('  Command      :', err.command       || 'n/a');
+    console.error('  Response     :', err.response      || 'n/a');
+    console.error('  ResponseCode :', err.responseCode  || 'n/a');
+    console.error('  Stack        :', err.stack);
+    console.error('  Full error   :', JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    console.error('  Checklist:');
+    console.error('    EMAIL_FROM         =', process.env.EMAIL_FROM        || '(MISSING)');
+    console.error('    BASE_URL           =', process.env.BASE_URL           || '(MISSING)');
+    // Return 500 so the frontend shows the payment ID.
+    // Reader can contact you to get their book manually.
     res.status(500).json({
       success: false,
       error:   'Payment confirmed but email delivery failed. Contact support.',
@@ -391,7 +400,12 @@ app.post('/api/webhook/razorpay', async (req, res) => {
     await sendDownloadEmail(email, book.title, downloadUrl);
     console.log(`[✓ Webhook Delivered] ${paymentId} | ${book.title} | ${email}`);
   } catch (err) {
-    console.error('[Webhook Email Error]', err.message);
+    console.error('[✗ Webhook Email Error]');
+    console.error('  Message      :', err.message);
+    console.error('  Code         :', err.code         || 'n/a');
+    console.error('  Response     :', err.response      || 'n/a');
+    console.error('  ResponseCode :', err.responseCode  || 'n/a');
+    console.error('  Stack        :', err.stack);
     // Don't return non-200 — Razorpay retries webhooks on failure
     // which would cause duplicate deliveries. Log and investigate manually.
   }
@@ -518,6 +532,32 @@ a{display:inline-block;margin-top:28px;color:#a62b2b;font-size:.75rem;
    START
 ════════════════════════════════════════════════════════ */
 const PORT = process.env.PORT || 3000;
+
+/* Startup config check — warn immediately if BASE_URL is wrong */
+(function checkConfig() {
+  const baseUrl = process.env.BASE_URL || '';
+  if (!baseUrl || baseUrl.includes('localhost')) {
+    console.warn('');
+    console.warn('╔══════════════════════════════════════════════════════════╗');
+    console.warn('║  [⚠ CONFIG WARNING]                                      ║');
+    console.warn('║  BASE_URL is set to: ' + (baseUrl || '(MISSING)').padEnd(36) + '║');
+    console.warn('║  This is a localhost URL. Download links in emails will  ║');
+    console.warn('║  point to the customer\'s own machine and will NOT work.  ║');
+    console.warn('║                                                          ║');
+    console.warn('║  Set BASE_URL to your Render domain in the Render        ║');
+    console.warn('║  dashboard → Environment, e.g.:                         ║');
+    console.warn('║  https://the-apertures-api.onrender.com                 ║');
+    console.warn('╚══════════════════════════════════════════════════════════╝');
+    console.warn('');
+  }
+  if (!process.env.EMAIL_FROM) {
+    console.error('[✗ CONFIG] EMAIL_FROM is not set in environment variables');
+  }
+  if (!process.env.RESEND_API_KEY) {
+    console.error('[✗ CONFIG] RESEND_API_KEY is not set in environment variables');
+  }
+})();
+
 app.listen(PORT, () => {
   console.log(`
 ╔══════════════════════════════════════════╗
