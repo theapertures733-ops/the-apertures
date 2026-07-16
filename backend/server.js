@@ -567,7 +567,7 @@ const PORT = process.env.PORT || 3000;
     console.warn('║  [⚠ CONFIG WARNING]                                      ║');
     console.warn('║  BASE_URL is set to: ' + (baseUrl || '(MISSING)').padEnd(36) + '║');
     console.warn('║  This is a localhost URL. Download links in emails will  ║');
-    console.warn('║  point to the customer's own machine and will NOT work.  ║');
+console.warn("Point to the customer's own machine and will NOT work.");   
     console.warn('║                                                          ║');
     console.warn('║  Set BASE_URL to your Render domain in the Render        ║');
     console.warn('║  dashboard → Environment, e.g.:                         ║');
